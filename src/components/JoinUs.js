@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Upload, MapPin, User, Mail, Briefcase, Send } from 'lucide-react';
+import { Upload, MapPin, User, Briefcase, Send } from 'lucide-react';
 
 const JoinUsPage = () => {
   const navigate = useNavigate();

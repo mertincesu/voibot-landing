@@ -130,9 +130,9 @@ const LandingPage = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-2xl font-bold mb-4 md:mb-0">VoiBot</div>
             <div className="flex space-x-6">
-              <a href="#" className="hover:text-indigo-400 transition duration-300">About</a>
-              <a href="#" className="hover:text-indigo-400 transition duration-300">Features</a>
-              <a href="#" className="hover:text-indigo-400 transition duration-300">Contact</a>
+              <a className="hover:text-indigo-400 transition duration-300">About</a>
+              <a className="hover:text-indigo-400 transition duration-300">Features</a>
+              <a className="hover:text-indigo-400 transition duration-300">Contact</a>
             </div>
             <div className="mt-4 md:mt-0">
               <a href="https://www.linkedin.com/in/voiai" className="flex items-center hover:text-indigo-400 transition duration-300">
