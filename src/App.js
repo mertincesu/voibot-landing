@@ -6,14 +6,12 @@ import JoinUs from './components/JoinUs';
 
 function App() {
   return (
-    <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/joinus" element={<JoinUs />} />
-        </Routes>
-      </Router>
-    </div>
+    <Router basename="/voibot-landing">
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/joinus" element={<JoinUs />} />
+      </Routes>
+    </Router>
   );
 }
 
