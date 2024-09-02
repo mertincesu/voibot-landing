@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/voibot-landing/static/css/main.73c0f7d4.css",
+    "main.js": "/voibot-landing/static/js/main.60e0279a.js",
+    "index.html": "/voibot-landing/index.html",
+    "main.73c0f7d4.css.map": "/voibot-landing/static/css/main.73c0f7d4.css.map",
+    "main.60e0279a.js.map": "/voibot-landing/static/js/main.60e0279a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.73c0f7d4.css",
+    "static/js/main.60e0279a.js"
+  ]
+}
