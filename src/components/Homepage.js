@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Zap, Settings, Users, ChevronRight, Linkedin } from 'lucide-react';
+import { Bot, Zap, Settings, Linkedin } from 'lucide-react';
 import { ReactTyped } from 'react-typed';
 
 const LandingPage = () => {
