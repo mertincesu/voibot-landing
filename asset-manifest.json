@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/voibot-landing/static/css/main.73c0f7d4.css",
-    "main.js": "/voibot-landing/static/js/main.e6e00207.js",
+    "main.js": "/voibot-landing/static/js/main.16f81b74.js",
     "index.html": "/voibot-landing/index.html",
     "main.73c0f7d4.css.map": "/voibot-landing/static/css/main.73c0f7d4.css.map",
-    "main.e6e00207.js.map": "/voibot-landing/static/js/main.e6e00207.js.map"
+    "main.16f81b74.js.map": "/voibot-landing/static/js/main.16f81b74.js.map"
   },
   "entrypoints": [
     "static/css/main.73c0f7d4.css",
-    "static/js/main.e6e00207.js"
+    "static/js/main.16f81b74.js"
   ]
 }
