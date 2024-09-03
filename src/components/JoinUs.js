@@ -14,8 +14,6 @@ const JoinUsPage = () => {
     cv: null,
     whyJoin: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,50 +28,6 @@ const JoinUsPage = () => {
       ...prevState,
       cv: e.target.files[0]
     }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitMessage('');
-
-    const form = e.target;
-    const formData = new FormData(form);
-
-    // Remove the file input from formData as we'll handle it separately
-    formData.delete('cv');
-
-    try {
-      // Submit form data to Netlify
-      const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString(),
-      });
-
-      if (response.ok) {
-        setSubmitMessage('Application submitted successfully!');
-        // Reset form
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          location: '',
-          position: '',
-          cv: null,
-          whyJoin: ''
-        });
-        // You might want to handle file upload separately here
-        // For example, upload to S3 and then update the form submission with the file URL
-      } else {
-        throw new Error('Form submission failed');
-      }
-    } catch (error) {
-      console.error('Error submitting application:', error);
-      setSubmitMessage('An error occurred. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   return (
@@ -109,13 +63,7 @@ const JoinUsPage = () => {
             </div>
             <div className="md:w-1/2 p-8 md:p-12">
               <h3 className="text-2xl font-semibold text-gray-800 mb-6">Apply Now</h3>
-              <form
-                name="join-us"
-                method="POST"
-                data-netlify="true"
-                onSubmit={handleSubmit}
-                className="space-y-4"
-              >
+              <form name="join-us" method="POST" data-netlify="true" encType="multipart/form-data" className="space-y-4">
                 <input type="hidden" name="form-name" value="join-us" />
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -198,22 +146,10 @@ const JoinUsPage = () => {
                 <button
                   type="submit"
                   className="w-full bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition duration-300 flex items-center justify-center"
-                  disabled={isSubmitting}
                 >
-                  {isSubmitting ? (
-                    <span>Submitting...</span>
-                  ) : (
-                    <>
-                      <Send className="mr-2" />
-                      Submit Application
-                    </>
-                  )}
+                  <Send className="mr-2" />
+                  Submit Application
                 </button>
-                {submitMessage && (
-                  <p className={`text-center ${submitMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
-                    {submitMessage}
-                  </p>
-                )}
               </form>
             </div>
           </div>
