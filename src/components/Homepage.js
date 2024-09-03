@@ -9,20 +9,22 @@ const LandingPage = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      {/* Navigation */}
-      <nav className="container mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
-          <div className="text-2xl font-bold">
-            <span className="text-gray-800">Voi</span>
-            <span className="text-indigo-600">Bot</span>
+      {/* New Top Navbar */}
+      <nav className="bg-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <Zap className="h-8 w-8 text-indigo-600 mr-2" />
+              <span className="font-bold text-2xl text-gray-800">Voi<span className="text-indigo-600">Bot</span></span>
+            </div>
+            <div className="flex-grow flex justify-center items-center space-x-8">
+              <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-gray-900">How it Works</a>
+            </div>
+            <button onClick={() => navigate('/joinus')} className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300">
+              Join Us
+            </button>
           </div>
-          <div className="hidden md:flex space-x-6">
-            <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
-            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900">How it Works</a>
-          </div>
-          <button onClick={() => navigate('/joinus')} className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300">
-            Join Us
-          </button>
         </div>
       </nav>
 
@@ -60,7 +62,7 @@ const LandingPage = () => {
               Coming Soon
               </button>
               <button
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate('/demo')}
                 className="bg-white text-gray-800 border-2 border-gray-800 px-8 py-3 rounded-md text-lg font-semibold hover:bg-gray-100 transition duration-300"
                 >
                 See Demo
@@ -107,7 +109,7 @@ const LandingPage = () => {
       </section>
 
       {/* Join the Team Section */}
-    <section className="bg-indigo-600 text-white py-20">
+      <section className="bg-indigo-600 text-white py-20">
         <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl font-bold mb-4">Join Our Team of AI Innovators</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
@@ -122,7 +124,7 @@ const LandingPage = () => {
             </button>
             </div>
         </div>
-    </section>
+      </section>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-10">
