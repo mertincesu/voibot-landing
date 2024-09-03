@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Upload, MapPin, User, Briefcase, Send } from 'lucide-react';
 
-const JoinUsPage = () => {
+const JoinUs = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
@@ -214,4 +214,4 @@ const JoinUsPage = () => {
   );
 };
 
-export default JoinUsPage;
+export default JoinUs;
