@@ -14,8 +14,6 @@ const JoinUsPage = () => {
     cv: null,
     whyJoin: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -155,22 +153,10 @@ const JoinUsPage = () => {
                 <button
                   type="submit"
                   className="w-full bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 transition duration-300 flex items-center justify-center"
-                  disabled={isSubmitting}
                 >
-                  {isSubmitting ? (
-                    <span>Submitting...</span>
-                  ) : (
-                    <>
-                      <Send className="mr-2" />
-                      Submit Application
-                    </>
-                  )}
+                  <Send className="mr-2" />
+                  Submit Application
                 </button>
-                {submitMessage && (
-                  <p className={`text-center ${submitMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
-                    {submitMessage}
-                  </p>
-                )}
               </form>
             </div>
           </div>
