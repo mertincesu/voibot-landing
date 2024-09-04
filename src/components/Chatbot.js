@@ -1,45 +1,73 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Send, Zap, Brain, Globe, Code, Mic, PaperclipIcon, BarChart, Settings, X, ChevronDown } from 'lucide-react';
+import { Send, Zap, Brain, Loader } from 'lucide-react';
+import axios from 'axios';
+import { TypeAnimation } from 'react-type-animation';
 
 const ChatbotInterface = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [activeBot, setActiveBot] = useState('assistant');
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [showBotOptions, setShowBotOptions] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [initError, setInitError] = useState(null);
   const messagesEndRef = useRef(null);
 
-  const botTypes = {
-    assistant: { icon: <Brain className="w-6 h-6" />, name: "AI Assistant", color: "from-indigo-500 to-purple-600" },
-    translator: { icon: <Globe className="w-6 h-6" />, name: "Translator", color: "from-indigo-500 to-purple-600" },
-    coder: { icon: <Code className="w-6 h-6" />, name: "Code Helper", color: "from-indigo-500 to-purple-600" },
+  const botType = {
+    assistant: { icon: <Brain className="w-6 h-6" />, name: "HR Assistant", color: "from-indigo-500 to-purple-600" },
   };
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:5000/initialize')
+      .then(response => {
+        console.log(response.data.message);
+        setIsInitialized(true);
+        setInitError(null);
+      })
+      .catch(error => {
+        console.error('Error initializing HR Assistant:', error);
+        setInitError('Failed to initialize HR Assistant. Please try refreshing the page.');
+      });
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSubmit = (e) => {
+  const formatMessage = (text) => {
+    // Remove <strong> tags
+    let formattedText = text.replace(/<\/?strong>/g, '');
+    
+    // Remove asterisks used for bold
+    formattedText = formattedText.replace(/\*\*/g, '');
+    
+    return formattedText;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || !isInitialized) return;
 
     setMessages(prev => [...prev, { text: input, sender: 'user' }]);
     setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      let response = "This is a simulated response from the chatbot.";
-      setMessages(prev => [...prev, { text: response, sender: 'bot' }]);
+    try {
+      const response = await axios.post('http://localhost:5000/chat', { query: input });
+      const formattedText = formatMessage(response.data.response);
+      setMessages(prev => [...prev, { text: formattedText, sender: 'bot', typing: true }]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorMessage = formatMessage('Sorry, there was an error processing your request. Please try again.');
+      setMessages(prev => [...prev, { text: errorMessage, sender: 'bot', typing: true }]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-800">
+    <div className="min-h-screen bg-gray-100 text-gray-800 flex flex-col">
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
@@ -54,179 +82,101 @@ const ChatbotInterface = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-grow flex justify-center items-center px-4 sm:px-6 lg:px-8 py-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="bg-white rounded-2xl shadow-xl overflow-hidden"
+          className="bg-white rounded-2xl shadow-xl overflow-hidden w-full max-w-7xl h-[80vh] flex flex-col"
         >
-          <div className="flex flex-col lg:flex-row h-[80vh]">
-            {/* Main Chat Area */}
-            <div className="flex-grow flex flex-col">
-              {/* Bot Type Selector */}
-              <div className="bg-gray-100 p-4">
-                <div className="md:hidden">
-                  <button
-                    onClick={() => setShowBotOptions(!showBotOptions)}
-                    className="w-full px-4 py-2 bg-white rounded-lg shadow text-left flex items-center justify-between"
-                  >
-                    <span className="flex items-center">
-                      {botTypes[activeBot].icon}
-                      <span className="ml-2">{botTypes[activeBot].name}</span>
-                    </span>
-                    <ChevronDown className={`w-5 h-5 transform transition-transform ${showBotOptions ? 'rotate-180' : ''}`} />
-                  </button>
-                  {showBotOptions && (
-                    <div className="mt-2 space-y-2">
-                      {Object.entries(botTypes).map(([key, bot]) => (
-                        <button
-                          key={key}
-                          onClick={() => {
-                            setActiveBot(key);
-                            setShowBotOptions(false);
-                          }}
-                          className={`w-full px-4 py-2 rounded-lg transition-colors ${
-                            activeBot === key 
-                              ? `bg-gradient-to-r ${bot.color} text-white`
-                              : 'bg-white text-gray-600 hover:bg-gray-200'
-                          }`}
-                        >
-                          <div className="flex items-center">
-                            {bot.icon}
-                            <span className="ml-2">{bot.name}</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="hidden md:flex justify-center space-x-4">
-                  {Object.entries(botTypes).map(([key, bot]) => (
-                    <button
-                      key={key}
-                      onClick={() => setActiveBot(key)}
-                      className={`px-4 py-2 rounded-full transition-colors ${
-                        activeBot === key 
-                          ? `bg-gradient-to-r ${bot.color} text-white`
-                          : 'bg-white text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        {bot.icon}
-                        <span className="ml-2">{bot.name}</span>
-                      </div>
-                    </button>
-                  ))}
+          {/* Bot Type Indicator */}
+          <div className="bg-gray-100 p-4">
+            <div className="flex justify-center">
+              <div className={`px-4 py-2 rounded-full bg-gradient-to-r ${botType.assistant.color} text-white`}>
+                <div className="flex items-center">
+                  {botType.assistant.icon}
+                  <span className="ml-2">{botType.assistant.name}</span>
                 </div>
               </div>
-
-              {/* Messages */}
-              <div className="flex-grow p-6 overflow-y-auto">
-                <AnimatePresence>
-                  {messages.map((message, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.8 }}
-                      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
-                    >
-                      <div className={`max-w-[70%] p-3 rounded-lg ${
-                        message.sender === 'user' 
-                          ? 'bg-indigo-100 text-indigo-900' 
-                          : `bg-gradient-to-r ${botTypes[activeBot].color} text-white`
-                      }`}>
-                        {message.text}
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-                {isTyping && (
-                  <div className="flex justify-start">
-                    <div className={`bg-gradient-to-r ${botTypes[activeBot].color} text-white p-3 rounded-lg animate-pulse`}>
-                      VoiBot is thinking...
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-
-              {/* Input Area */}
-              <form onSubmit={handleSubmit} className="bg-gray-100 p-4">
-                <div className="flex items-center space-x-2">
-                  <button type="button" className="text-gray-400 hover:text-indigo-600">
-                    <Mic className="w-6 h-6" />
-                  </button>
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type your message here..."
-                    className="flex-grow px-4 py-2 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                  <button type="button" className="text-gray-400 hover:text-indigo-600">
-                    <PaperclipIcon className="w-6 h-6" />
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-2 rounded-full hover:from-indigo-600 hover:to-purple-700 transition duration-300"
-                  >
-                    <Send className="w-6 h-6" />
-                  </button>
-                </div>
-              </form>
             </div>
-
-            {/* Sidebar */}
-            <AnimatePresence>
-              {showSidebar && (
-                <motion.div
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: "300px", opacity: 1 }}
-                  exit={{ width: 0, opacity: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="bg-gray-100 p-4 border-l border-gray-200"
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">Chat Info</h2>
-                    <button onClick={() => setShowSidebar(false)} className="text-gray-500 hover:text-gray-700">
-                      <X className="w-6 h-6" />
-                    </button>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="bg-white p-4 rounded-lg shadow">
-                      <h3 className="font-semibold mb-2">Chat Statistics</h3>
-                      <BarChart className="w-full h-32 text-indigo-600" />
-                    </div>
-                    <div className="bg-white p-4 rounded-lg shadow">
-                      <h3 className="font-semibold mb-2">Settings</h3>
-                      <ul className="space-y-2">
-                        <li className="flex items-center">
-                          <Settings className="w-5 h-5 mr-2 text-indigo-600" />
-                          <span>Customize Responses</span>
-                        </li>
-                        <li className="flex items-center">
-                          <Settings className="w-5 h-5 mr-2 text-indigo-600" />
-                          <span>Notification Preferences</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
-        </motion.div>
 
-        {/* Sidebar Toggle Button */}
-        <button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="fixed bottom-4 right-4 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition duration-300"
-        >
-          <BarChart className="w-6 h-6" />
-        </button>
+          {/* Messages */}
+          <div className="flex-grow overflow-y-auto p-6">
+            {!isInitialized && !initError ? (
+              <div className="flex justify-center items-center h-full">
+                <Loader className="w-8 h-8 text-indigo-600 animate-spin" />
+              </div>
+            ) : initError ? (
+              <div className="text-red-500 text-center mb-4">{initError}</div>
+            ) : (
+              <AnimatePresence>
+                {messages.map((message, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.8 }}
+                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
+                  >
+                    <div className={`max-w-[60%] p-3 rounded-lg ${
+                      message.sender === 'user' 
+                        ? 'bg-indigo-100 text-indigo-900' 
+                        : `bg-gradient-to-r ${botType.assistant.color} text-white`
+                    } text-left`}>
+                      {message.sender === 'bot' && message.typing ? (
+                        <TypeAnimation
+                          sequence={[message.text]}
+                          wrapper="span"
+                          speed={80}
+                          style={{ display: 'inline-block', whiteSpace: 'pre-wrap' }}
+                          repeat={1}
+                          cursor={false}
+                        />
+                      ) : (
+                        <span>{message.text}</span>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            )}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className={`bg-gradient-to-r ${botType.assistant.color} text-white p-3 rounded-lg flex items-center`}>
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce opacity-50"></div>
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce opacity-50" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce opacity-50" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <form onSubmit={handleSubmit} className="bg-gray-100 p-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask an HR-related question..."
+                className="flex-grow px-4 py-2 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                disabled={!isInitialized || isTyping}
+              />
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-2 rounded-full hover:from-indigo-600 hover:to-purple-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!isInitialized || isTyping}
+              >
+                <Send className="w-6 h-6" />
+              </button>
+            </div>
+          </form>
+        </motion.div>
       </div>
     </div>
   );

@@ -1,0 +1,10 @@
+[build]
+  functions = "netlify/functions"
+  command = "npm run build"
+  publish = "build"
+
+[dev]
+  framework = "create-react-app"
+
+[functions]
+  node_bundler = "esbuild" # Optional, but improves Node.js compatibility.
