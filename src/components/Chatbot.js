@@ -19,7 +19,7 @@ const ChatbotInterface = () => {
   };
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/initialize')
+    axios.get('/initialize')
       .then(response => {
         console.log(response.data.message);
         setIsInitialized(true);
