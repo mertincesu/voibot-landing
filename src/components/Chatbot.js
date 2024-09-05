@@ -19,7 +19,7 @@ const ChatbotInterface = () => {
   };
 
   useEffect(() => {
-    axios.get('/initialize')
+    axios.get('https://voibot-landing-48974dd599d3.herokuapp.com/initialize')
       .then(response => {
         console.log(response.data.message);
         setIsInitialized(true);
@@ -54,7 +54,7 @@ const ChatbotInterface = () => {
     setIsTyping(true);
 
     try {
-      const response = await axios.post('/chat', { query: input });
+      const response = await axios.post('https://voibot-landing-48974dd599d3.herokuapp.com/chat', { query: input });
       const formattedText = formatMessage(response.data.response);
       setMessages(prev => [...prev, { text: formattedText, sender: 'bot', typing: true }]);
     } catch (error) {
