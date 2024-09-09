@@ -18,8 +18,6 @@ const LandingPage = () => {
               <span className="font-bold text-2xl text-gray-800">Voi<span className="text-indigo-600">Bot</span></span>
             </div>
             <div className="flex-grow flex justify-center items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-gray-900">How it Works</a>
             </div>
             <button onClick={() => navigate('/joinus')} className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition duration-300">
               Join Us
