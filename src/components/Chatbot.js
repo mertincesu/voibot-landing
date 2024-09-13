@@ -15,7 +15,7 @@ const ChatbotInterface = () => {
   const messagesEndRef = useRef(null);
 
   const botType = {
-    assistant: { icon: <Brain className="w-6 h-6" />, name: "HR Assistant", color: "from-indigo-500 to-purple-600" },
+    assistant: { icon: <Brain className="w-6 h-6" />, name: "Voi AI Assistant", color: "from-indigo-500 to-purple-600" },
   };
 
   useEffect(() => {
@@ -26,8 +26,8 @@ const ChatbotInterface = () => {
         setInitError(null);
       })
       .catch(error => {
-        console.error('Error initializing HR Assistant:', error);
-        setInitError('Failed to initialize HR Assistant. Please try refreshing the page.');
+        console.error('Error initializing Voi AI Assistant:', error);
+        setInitError('Failed to initialize Voi AI Assistant. Please try refreshing the page.');
       });
   }, []);
 
@@ -54,7 +54,7 @@ const ChatbotInterface = () => {
     setIsTyping(true);
 
     try {
-      const response = await axios.post('https://voibot-landing-48974dd599d3.herokuapp.com/chat', { query: input });
+      const response = await axios.post('https://voibot-landing-48974dd599d3.herokuapp.com/api/some-endpoint/chat', { query: input });
       const formattedText = formatMessage(response.data.response);
       setMessages(prev => [...prev, { text: formattedText, sender: 'bot', typing: true }]);
     } catch (error) {
