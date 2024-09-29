@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Zap, Settings, Linkedin } from 'lucide-react';
+import { Bot, Zap, Settings, Linkedin, BookOpen } from 'lucide-react';
 import { ReactTyped } from 'react-typed';
 
 const LandingPage = () => {
@@ -69,6 +69,36 @@ const LandingPage = () => {
           </motion.div>
         </div>
       </header>
+
+      {/* New VoiBot Python Library Section */}
+      <section className="py-20 bg-indigo-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="mb-8"
+            >
+              <BookOpen className="w-24 h-24 text-indigo-600 mx-auto" />
+            </motion.div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Harness the Power of VoiBot with Our Python Library
+            </h2>
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              Unlock the full potential of AI-driven conversations in your Python projects. Our comprehensive library puts the power of VoiBot at your fingertips, enabling seamless integration and limitless possibilities.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/library-documentation')}
+              className="bg-indigo-600 text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-indigo-700 transition duration-300"
+            >
+              Explore Documentation
+            </motion.button>
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
       <section id="features" className="py-20 bg-gray-50">
