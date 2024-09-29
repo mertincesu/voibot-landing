@@ -77,7 +77,7 @@ const LibDocumentation = () => {
                   <h2 className="text-2xl font-semibold mb-4 text-left">Initialization</h2>
                   <p className="mb-4 text-left">To initialize the VoiAssistant, import the class and set up the required parameters:</p>
                   <pre className="bg-gray-100 p-4 rounded-md mb-4 overflow-x-auto text-left">
-                    <code>{`# Import VoiAssistant voibot.chatbot                    
+                    <code>{`# Import VoiAssistant from voibot.chatbot                    
 from voibot.chatbot import VoiAssistant
 
 # Set up assistant parameters
@@ -132,18 +132,22 @@ assistant.initialize_assistant()`}</code>
                     <code>{`intents = {
     "Company-related": "Questions about the company",
     "Assistant-related": "Questions about the assistant's capabilities",
-    "Greeting": "Casual greetings like 'Hello' or 'How are you?'"
+    "Greeting": "Casual greetings like 'Hello' or 'How are you?'",
+    ...
 }
 
 replies = {
     "Company-related": "RAG",
     "Assistant-related": "role_based_llm_reply",
-    "Greeting": "role_based_llm_reply"
+    "Greeting": "role_based_llm_reply",
+    ...
 }
 
 segment_assignments = {
     "Company-related": "unified",
-    "Assistant-related": "unified"
+    "Assistant-related": "unified",
+    "Greeting": "unified",
+    ...
 }`}</code>
                   </pre>
                 </div>
@@ -249,7 +253,7 @@ segment_assignments = {
                   <p className="mb-4 text-left">
                     <strong>Explanation:</strong> When the user greets the assistant with something like "Hello" or 
                     "How are you?", the assistant dynamically generates a response such as "Hello! How can I assist 
-                    you with Voi AI today?" based on the role and context of the conversation.
+                    you with Voi AI today?" based on the role of the assistant (Role that is defined in Initialization).
                   </p>
 
                   <h3 className="text-xl font-semibold mb-2 text-left">3. Retrieval-Augmented Generation (RAG)</h3>
