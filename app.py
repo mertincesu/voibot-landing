@@ -36,7 +36,7 @@ HR_CLASSES = {
     "Company-related": "Questions about the company (Voi AI), the product (VoiBot) etc.",
     "Virtual-assistant related": "Questions about the assistant that is answering the questions, like 'what do you know?'",
     "Other Topic": "Inquiries/Statements non-related to HR",
-    "Greeting": "Anything similar to Hey or How are you",
+    "Greeting": "Anything similar to Hello or How are you",
     "Not Understandable Word/Phrase": "Gibberish like eubcwucbi"
 }
 HR_AUTOMATIC_REPLIES = {
