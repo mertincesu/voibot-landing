@@ -268,6 +268,8 @@ replies = {
           return `    "${intent.data.label}": "role_based_llm_reply",`;
         case 'ragReply':
           return `    "${intent.data.label}": "RAG",`;
+        default:
+          return `    "${intent.data.label}": "default_response",`;
       }
     }
     return `    "${intent.data.label}": "default_response",`;
