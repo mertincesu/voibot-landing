@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import ReactFlow, { 
   Background, 
   Controls, 
-  MiniMap,
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
