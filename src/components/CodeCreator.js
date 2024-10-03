@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactFlow, { 
   Background, 
@@ -123,6 +123,12 @@ const LibDocumentation = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
+  useEffect(() => {
+    if (reactFlowInstance) {
+      reactFlowInstance.setViewport({ x: 0, y: 0, zoom: 1 });
+    }
+  }, [reactFlowInstance]);
+
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [setNodes]
@@ -161,12 +167,16 @@ const LibDocumentation = () => {
 
   const addNode = (type) => {
     if (!reactFlowInstance) return;
-
+  
+    const centerX = reactFlowWrapper.current.offsetWidth / 2;
+    const centerY = reactFlowWrapper.current.offsetHeight / 2;
+  
+    // Calculate a position with a random offset from the center
     const position = reactFlowInstance.project({
-      x: reactFlowWrapper.current.offsetWidth / 2,
-      y: reactFlowWrapper.current.offsetHeight / 2
+      x: centerX + (Math.random() - 0.5) * 300, // Random X offset within 300px
+      y: centerY + (Math.random() - 0.5) * 300, // Random Y offset within 300px
     });
-
+  
     const newNode = {
       id: `${type}-${nextId.current}`,
       type,
@@ -372,16 +382,15 @@ while True:
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
-                fitView
                 onInit={setReactFlowInstance}
                 connectionLineStyle={{ stroke: "#ddd", strokeWidth: 2 }}
                 connectionLineType="bezier"
                 snapToGrid={true}
                 snapGrid={[32, 32]}
+                defaultViewport={{ x: 0, y: 0, zoom: 1 }}
               >
                 <Background />
                 <Controls />
-                <MiniMap />
               </ReactFlow>
             </div>
           </div>

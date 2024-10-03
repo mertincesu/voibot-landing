@@ -124,17 +124,17 @@ const LandingPage = () => {
             <FeatureCard
               icon={<Bot className="w-10 h-10 text-indigo-600" />}
               title="Intuitive Bot Creation"
-              description="Build custom chatbots with our easy-to-use interface. No coding required."
+              description="Build custom chatbots and virtual assistants with our easy-to-use drag-and-drop interface."
             />
             <FeatureCard
               icon={<Zap className="w-10 h-10 text-indigo-600" />}
-              title="Instant Deployment"
-              description="Integrate your chatbots instantly to web, mobile, or messaging platforms using our API."
+              title="Easy Integration"
+              description="Seamlessly integrate these custom chatbots into your projects with our instant code-generator"
             />
             <FeatureCard
               icon={<Settings className="w-10 h-10 text-indigo-600" />}
-              title="Advanced Customization"
-              description="Fine-tune your bot's responses, personality, and knowledge base."
+              title="Further Customization"
+              description="Test and improve your bot's responses, personality, and knowledge base."
             />
           </div>
         </div>
@@ -145,9 +145,9 @@ const LandingPage = () => {
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">How VoiBot Works</h2>
           <div className="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-12">
-            <StepCard number={1} title="Define Your Bot" description="Set your bot's purpose, personality, and knowledge base." />
-            <StepCard number={2} title="Train & Test" description="Use our intuitive interface to train and refine your bot's responses." />
-            <StepCard number={3} title="Deploy & Monitor" description="Launch your bot and gain insights from user interactions." />
+            <StepCard number={1} title="Define Your Bot" description="Create intents and link to response types" />
+            <StepCard number={2} title="Build Knowledge Base" description="Add database segments for knowledge base" />
+            <StepCard number={3} title="Connect Data Sources" description="Connect PDF URLs to database segments" />
           </div>
         </div>
       </section>
