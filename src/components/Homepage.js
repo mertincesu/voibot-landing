@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Zap, Settings, Linkedin, BookOpen } from 'lucide-react';
+import { Bot, Zap, Settings, Linkedin, BookOpen, Code } from 'lucide-react';
 import { ReactTyped } from 'react-typed';
 
 const LandingPage = () => {
@@ -85,17 +85,33 @@ const LandingPage = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Harness the Power of VoiBot with Our Python Library
             </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
               Unlock the full potential of AI-driven conversations in your Python projects. Our comprehensive library puts the power of VoiBot at your fingertips, enabling seamless integration and limitless possibilities.
             </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/library-documentation')}
-              className="bg-indigo-600 text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-indigo-700 transition duration-300"
-            >
-              Explore Documentation
-            </motion.button>
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/library-documentation')}
+                className="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition duration-300 shadow-lg hover:shadow-xl w-full sm:w-auto"
+              >
+                <div className="flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  Explore Documentation
+                </div>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/code-creator')}
+                className="bg-purple-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-purple-700 transition duration-300 shadow-lg hover:shadow-xl w-full sm:w-auto"
+              >
+                <div className="flex items-center justify-center">
+                  <Code className="w-5 h-5 mr-2" />
+                  Code Creator
+                </div>
+              </motion.button>
+            </div>
           </div>
         </div>
       </section>
