@@ -13,92 +13,92 @@ import 'reactflow/dist/style.css';
 import { PlusCircle, MessageSquare, Database, Zap, Code, X, Check, Link } from 'lucide-react';
 
 const IntentNode = ({ data, isConnectable }) => (
-  <div className="p-3 rounded-lg bg-blue-100 border-2 border-blue-500">
+  <div className="p-2 rounded-lg bg-blue-100 border-2 border-blue-500 w-40">
     <Handle type="source" position="right" isConnectable={isConnectable} />
     <input
-      className="font-bold bg-transparent border-b border-blue-500 mb-2 w-full"
+      className="font-bold bg-transparent border-b border-blue-500 mb-1 w-full text-sm"
       value={data.label}
       onChange={data.onLabelChange}
       placeholder="Intent Name"
     />
     <textarea
-      className="text-sm bg-transparent w-full"
+      className="text-xs bg-transparent w-full"
       value={data.definition}
       onChange={data.onDefinitionChange}
       placeholder="Intent Definition"
       rows="2"
     />
     <button onClick={data.onDelete} className="absolute top-0 right-0 p-1">
-      <X size={16} />
+      <X size={12} />
     </button>
   </div>
 );
 
 const AutoReplyNode = ({ data, isConnectable }) => (
-  <div className="p-3 rounded-lg bg-green-100 border-2 border-green-500">
+  <div className="p-2 rounded-lg bg-green-100 border-2 border-green-500 w-40">
     <Handle type="target" position="left" isConnectable={isConnectable} />
-    <h3 className="font-bold mb-2">Auto Reply</h3>
+    <h3 className="font-bold text-sm mb-1">Auto Reply</h3>
     <textarea
-      className="text-sm bg-transparent w-full"
+      className="text-xs bg-transparent w-full"
       value={data.content}
       onChange={data.onContentChange}
       placeholder="Auto Reply Content"
       rows="2"
     />
     <button onClick={data.onDelete} className="absolute top-0 right-0 p-1">
-      <X size={16} />
+      <X size={12} />
     </button>
   </div>
 );
 
 const LLMReplyNode = ({ data, isConnectable }) => (
-  <div className="p-3 rounded-lg bg-yellow-100 border-2 border-yellow-500">
+  <div className="p-2 rounded-lg bg-yellow-100 border-2 border-yellow-500 w-40">
     <Handle type="target" position="left" isConnectable={isConnectable} />
-    <h3 className="font-bold">LLM Reply</h3>
+    <h3 className="font-bold text-sm">LLM Reply</h3>
     <button onClick={data.onDelete} className="absolute top-0 right-0 p-1">
-      <X size={16} />
+      <X size={12} />
     </button>
   </div>
 );
 
 const RAGReplyNode = ({ data, isConnectable }) => (
-  <div className="p-3 rounded-lg bg-purple-100 border-2 border-purple-500">
+  <div className="p-2 rounded-lg bg-purple-100 border-2 border-purple-500 w-40">
     <Handle type="target" position="left" isConnectable={isConnectable} />
     <Handle type="source" position="right" isConnectable={isConnectable} />
-    <h3 className="font-bold">RAG Reply</h3>
+    <h3 className="font-bold text-sm">RAG Reply</h3>
     <button onClick={data.onDelete} className="absolute top-0 right-0 p-1">
-      <X size={16} />
+      <X size={12} />
     </button>
   </div>
 );
 
 const DatabaseSegmentNode = ({ data, isConnectable }) => (
-  <div className="p-3 rounded-lg bg-indigo-100 border-2 border-indigo-500">
+  <div className="p-2 rounded-lg bg-indigo-100 border-2 border-indigo-500 w-40">
     <Handle type="target" position="left" isConnectable={isConnectable} />
     <Handle type="source" position="right" isConnectable={isConnectable} />
     <input
-      className="font-bold bg-transparent border-b border-indigo-500 mb-2 w-full"
+      className="font-bold bg-transparent border-b border-indigo-500 mb-1 w-full text-sm"
       value={data.label}
       onChange={data.onLabelChange}
       placeholder="Segment Name"
     />
     <button onClick={data.onDelete} className="absolute top-0 right-0 p-1">
-      <X size={16} />
+      <X size={12} />
     </button>
   </div>
 );
 
 const URLNode = ({ data, isConnectable }) => (
-  <div className="p-3 rounded-lg bg-red-100 border-2 border-red-500">
+  <div className="p-2 rounded-lg bg-red-100 border-2 border-red-500 w-40">
     <Handle type="target" position="left" isConnectable={isConnectable} />
     <input
-      className="text-sm bg-transparent w-full"
+      className="text-xs bg-transparent w-full"
       value={data.url}
       onChange={data.onURLChange}
       placeholder="Enter URL"
     />
     <button onClick={data.onDelete} className="absolute top-0 right-0 p-1">
-      <X size={16} />
+      <X size={12} />
     </button>
   </div>
 );
@@ -120,6 +120,8 @@ const LibDocumentation = () => {
   const [generatedCode, setGeneratedCode] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const nextId = useRef(1);
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -158,10 +160,17 @@ const LibDocumentation = () => {
   );
 
   const addNode = (type) => {
+    if (!reactFlowInstance) return;
+
+    const position = reactFlowInstance.project({
+      x: reactFlowWrapper.current.offsetWidth / 2,
+      y: reactFlowWrapper.current.offsetHeight / 2
+    });
+
     const newNode = {
       id: `${type}-${nextId.current}`,
       type,
-      position: { x: 100, y: 100 + (nextId.current * 100) },
+      position,
       data: {
         label: type === 'intent' ? 'New Intent' : type === 'databaseSegment' ? 'New Segment' : '',
         definition: '',
@@ -312,46 +321,48 @@ while True:
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <nav className="container mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
-          <div className="text-2xl font-bold">
-            <span className="text-gray-800">Voi</span>
-            <span className="text-indigo-600">Bot</span>
+    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+      <nav className="bg-white shadow-sm">
+        <div className="container mx-auto px-6 py-3">
+          <div className="flex justify-between items-center">
+            <div className="text-2xl font-bold">
+              <span className="text-gray-800">Voi</span>
+              <span className="text-indigo-600">Bot</span>
+            </div>
+            <button onClick={() => navigate('/')} className="text-indigo-600 hover:text-indigo-800 transition duration-300">
+              Back to Home
+            </button>
           </div>
-          <button onClick={() => navigate('/')} className="text-indigo-600 hover:text-indigo-800 transition duration-300">
-            Back to Home
-          </button>
         </div>
       </nav>
 
-      <div className="container mx-auto px-6 py-8">
-        <h1 className="text-3xl font-bold mb-8">Build Your VoiBot Assistant</h1>
+      <div className="flex-grow container mx-auto px-6 py-4 flex flex-col">
+        <h1 className="text-2xl font-bold mb-4">Build Your VoiBot Assistant</h1>
 
         {!showCode ? (
-          <>
-            <div className="flex space-x-4 mb-4">
-              <button onClick={() => addNode('intent')} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                <PlusCircle size={20} className="inline mr-2" /> Add Intent
+          <div className="flex-grow flex flex-col">
+            <div className="flex flex-wrap gap-2 mb-4">
+              <button onClick={() => addNode('intent')} className="bg-blue-500 text-white px-2 py-1 rounded text-sm hover:bg-blue-600">
+                <PlusCircle size={16} className="inline mr-1" /> Intent
               </button>
-              <button onClick={() => addNode('autoReply')} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                <MessageSquare size={20} className="inline mr-2" /> Add Auto Reply
+              <button onClick={() => addNode('autoReply')} className="bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600">
+                <MessageSquare size={16} className="inline mr-1" /> Auto Reply
               </button>
-              <button onClick={() => addNode('llmReply')} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-                <Zap size={20} className="inline mr-2" /> Add LLM Reply
+              <button onClick={() => addNode('llmReply')} className="bg-yellow-500 text-white px-2 py-1 rounded text-sm hover:bg-yellow-600">
+                <Zap size={16} className="inline mr-1" /> LLM Reply
               </button>
-              <button onClick={() => addNode('ragReply')} className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
-                <Database size={20} className="inline mr-2" /> Add RAG Reply
+              <button onClick={() => addNode('ragReply')} className="bg-purple-500 text-white px-2 py-1 rounded text-sm hover:bg-purple-600">
+                <Database size={16} className="inline mr-1" /> RAG Reply
               </button>
-              <button onClick={() => addNode('databaseSegment')} className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">
-                <Database size={20} className="inline mr-2" /> Add Database Segment
+              <button onClick={() => addNode('databaseSegment')} className="bg-indigo-500 text-white px-2 py-1 rounded text-sm hover:bg-indigo-600">
+                <Database size={16} className="inline mr-1" /> Database Segment
               </button>
-              <button onClick={() => addNode('url')} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                <Link size={20} className="inline mr-2" /> Add URL
+              <button onClick={() => addNode('url')} className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600">
+                <Link size={16} className="inline mr-1" /> URL
               </button>
             </div>
 
-            <div style={{ height: '600px', width: '100%' }}>
+            <div className="flex-grow" style={{ height: 'calc(100vh - 240px)' }} ref={reactFlowWrapper}>
               <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -360,34 +371,35 @@ while True:
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
                 fitView
+                onInit={setReactFlowInstance}
                 connectionLineStyle={{ stroke: "#ddd", strokeWidth: 2 }}
                 connectionLineType="bezier"
                 snapToGrid={true}
-                snapGrid={[16, 16]}
+                snapGrid={[32, 32]}
               >
                 <Background />
                 <Controls />
                 <MiniMap />
               </ReactFlow>
             </div>
-          </>
+          </div>
         ) : (
-          <div className="bg-gray-800 p-4 rounded-lg relative">
-            <pre className="text-white overflow-auto p-4 text-left" style={{ maxHeight: '600px' }}>
+          <div className="flex-grow bg-gray-800 rounded-lg relative overflow-hidden">
+            <pre className="text-white overflow-auto h-full p-4 text-left" style={{ maxHeight: 'calc(100vh - 240px)' }}>
               <code>{generatedCode}</code>
             </pre>
             <button 
               onClick={copyToClipboard}
-              className="absolute top-4 right-4 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md flex items-center"
+              className="absolute top-2 right-6 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-md flex items-center text-sm"
             >
               {isCopied ? (
                 <>
-                  <Check size={16} className="mr-1" />
+                  <Check size={14} className="mr-1" />
                   Copied!
                 </>
               ) : (
                 <>
-                  <Code size={16} className="mr-1" />
+                  <Code size={14} className="mr-1" />
                   Copy Code
                 </>
               )}
@@ -403,15 +415,15 @@ while True:
               setShowCode(false);
             }
           }} 
-          className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 mt-8"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 mt-4 self-end"
         >
           {showCode ? (
             <>
-              <Code size={20} className="inline mr-2" /> Back to Build
+              <Code size={18} className="inline mr-2" /> Back to Build
             </>
           ) : (
             <>
-              <Code size={20} className="inline mr-2" /> Generate VoiBot Code
+              <Code size={18} className="inline mr-2" /> Generate VoiBot Code
             </>
           )}
         </button>
